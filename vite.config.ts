@@ -9,6 +9,7 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
+import tailwindcss from '@tailwindcss/vite'
 
 import path from 'path'
 
@@ -49,6 +50,7 @@ export default defineConfig({
       // 自动安装图标库
       autoInstall: true,
     }),
+    tailwindcss(),
   ],
   resolve: {
     alias: {
