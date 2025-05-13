@@ -13,7 +13,7 @@
           <el-input v-model.trim="loginForm.username" placeholder="请输入用户名" />
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model.trim="loginForm.password" placeholder="请输入密码" />
+          <el-input show-password type="password" v-model.trim="loginForm.password" placeholder="请输入密码" />
         </el-form-item>
         <el-form-item>
           <el-button class="w-full" type="primary" @click="handleLogin">登录</el-button>
@@ -25,6 +25,7 @@
 
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
+import { loginApi } from '@/api/auth'
 
 interface LoginFormType {
   username: string;
@@ -41,7 +42,7 @@ const loginForm = reactive<LoginFormType>({
 const rules = reactive<FormRules<LoginFormType>>({
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 1, max: 12, message: '用户名长度在 2 到 12个字符', trigger: 'blur' },
+    { min: 1, max: 6, message: '用户名长度在 2 到 6个字符', trigger: 'blur' },
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
@@ -51,7 +52,22 @@ const rules = reactive<FormRules<LoginFormType>>({
 
 const handleLogin = async () => {
   await loginFormRef.value?.validate();
-  console.log(loginForm);
+  const params = {
+    name: loginForm.username,
+    pwd: loginForm.password,
+  }
+  try {
+    await loginApi(params)
+    ElMessage.success('登录成功')
+    /**
+     * todo user Store
+     * 路由拦截
+     */
+  }catch (error) {
+    // ElMessage.error(error || '登录失败')
+    console.log('登录失败', error)
+  }
+
 }
 </script>
 
