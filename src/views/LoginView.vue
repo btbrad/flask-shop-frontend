@@ -26,6 +26,12 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
 import { loginApi } from '@/api/auth'
+import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router'
+
+const userStore = useUserStore()
+
+const router = useRouter()
 
 interface LoginFormType {
   username: string;
@@ -57,17 +63,14 @@ const handleLogin = async () => {
     pwd: loginForm.password,
   }
   try {
-    await loginApi(params)
+    const res = await loginApi(params)
     ElMessage.success('登录成功')
-    /**
-     * todo user Store
-     * 路由拦截
-     */
-  }catch (error) {
-    // ElMessage.error(error || '登录失败')
+    console.log('login', res)
+    userStore.setToken(res.data.token)
+    router.push('/')
+  } catch (error) {
     console.log('登录失败', error)
   }
-
 }
 </script>
 
